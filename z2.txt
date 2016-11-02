@@ -1,0 +1,30 @@
+Approach that first came to my head looks in the following way:
+
+Let's say we are going to generate N articles, which could be written by K authors (N and K could be chosen either randomly for each generated test case or manually).
+In the beginning we need to generate "matrix of cooperation" A, which has shape of (K, K) and contains all zeros.
+Now it's time to generate those N articles.
+For each generated article set of authors needs to be selected. The easiest way to have all authors is simply by assigning their IDs sequentially as numbers from range [0, K-1].
+Let's select k authors for each article, where k can be chosen as random number in range of natural numbers in range from 1 to k_max (k_max can be chosen either manually, as the most appropriate maximum number of authors in one article, or as total number of authors(K), if we don't want to impose restrictions and allow even all authors cooperate together in one article).
+Then, k distinct authors shall be selected out all authors. That set of authors will mean that they all have cooperated while writing current article.
+The next step will be generating all possible unique unordered pairs of authors from that set (means that (Author3, Author7) is no different from (Author7, Author3)). Let's say that in each such pair first element of the pair has index i and second element - j. Now we have a pair of indexes (i, j), thus the last step would be incrementing cells of "matrix of cooperation" A with indexes (i, j) and (j, i) by 1.
+Besides that, generate other necessary meta-information to the XML for the article.
+As a result, new article will be created and it will possess some authors. And in the end, we will know matrix
+In the similar way produce other N-1 articles.
+
+
+In the end, we'll get generated XML file and will know matrix of cooperation for it, which allows to run the program on this XML file and check whether result of it is the same as produced matrix of cooperation filled in during test case generation.
+
+Such approach will allow to run this scenario as many times as we want and compose a test suite out of them.
+
+Pseudocode for a single test case may look like this:
+
+A = zeros((K, K))
+for article in range(N):
+    k = randrange(1, k_max)
+    authors = select_k_distinct_authors(k)
+    for pair in uniq_pairs(authors):
+        i, j = get_indexes(pair)
+        A[i][j] += 1
+        A[j][i] += 1
+
+    format_as_xml_and_add_other_metainformation(article, authors)
